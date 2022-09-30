@@ -78,6 +78,7 @@ class Articulo{
 
 class DetalleOrden{
     private  int cantidad;
+    private Articulos[] lista_articulos;
     public void  calcPrecio(){
         
     }
@@ -89,6 +90,12 @@ class DetalleOrden{
     }
     public void calcPeso(){
         
+    }
+    public DetalleOrden(int cantidad){
+        this.cantidad = cantidad;
+        for(int i = 0; i < cantidad; ++i){
+            this.lista_articulos[i] = 
+            }
     }
 }
 
