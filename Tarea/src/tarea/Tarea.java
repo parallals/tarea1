@@ -37,7 +37,7 @@ class Cliente{
         this.nombre = nombre;
         this.rut = rut;
     }
-    
+    //Getters, Setters y toString
     public String getNombre(){
         return nombre;
     }
@@ -62,7 +62,7 @@ class Direccion{
     public Direccion(String direccion){
         this.direccion = direccion;
     }
-        
+    //Getters, Setters y toString
     public String getDireccion(){
         return direccion;
     }
@@ -83,7 +83,7 @@ class DocTributario{
         this.rut = rut;
         this.fecha = fecha;
     }
-            
+    //Getters, Setters y toString
     public String getNumero(){
         return numero;
     }
@@ -103,7 +103,7 @@ class DocTributario{
         this.fecha = fecha;
     }
     public void toStringDocTributario(){
-        System.out.println("Esta clase hereda sus atributos a Boleta y Factura");
+        System.out.println("Esta clase hereda sus atributos (Numero, Monto y Fecha) a Boleta y Factura");
     }
 }
 
@@ -111,18 +111,19 @@ class Boleta extends DocTributario{
     public Boleta(String numero, String rut, Date Fecha){
         super(numero, rut, Fecha);      
     }
-    
+    //Getters, Setters y toString
     public void toStringBoleta(){
-        System.out.println("Esta clase es heredera de los atributos de Doc Tributario");
+        System.out.println("Esta clase es heredera de los atributos de DocTributario (Numero, Monto y Fecha)");
     }
+}
 
 class Factura extends DocTributario{
     public Factura(String numero, String rut, Date Fecha){
         super(numero, rut, Fecha); 
     }
-    
+    //Getters, Setters y toString
     public void toStringFactura(){
-    System.out.println("Esta clase es heredera de los atributos de DocTributario");
+        System.out.println("Esta clase es heredera de los atributos de DocTributario (Numero, Monto y Fecha)");
     }
 }
 
@@ -164,6 +165,10 @@ class Pago{
         this.monto = monto;
         this.fecha = fecha;
     }
+    //Getters, Setters y toString
+    public void toStringTarjeta(){
+        System.out.println("Esta clase hereda sus atributos (Monto y Fecha) a Efectivo, Transferencia y Tarjeta");
+    }
 }
 
 class Efectivo extends Pago{
@@ -173,6 +178,10 @@ class Efectivo extends Pago{
     
     public Efectivo(float monto, Date fecha){
         super(monto, fecha);
+    }
+    //Getters, Setters y toString
+    public void toStringEfectivo(){
+        System.out.println("Esta clase es heredera de los atributos de Pago (Monto y fecha), ademas tiene un metodo para calcular la Devolucion del pago");
     }
 }
 
@@ -185,6 +194,10 @@ class Tranferencia extends Pago{
         this.banco = banco;
         this.numCuenta = numCuenta;
     }
+    //Getters, Setters y toString
+    public void toStringTransferencia(){
+        System.out.println("Esta clase es heredera de los atributos de Pago (Monto y fecha), ademas guarda el Banco y el Numero de Cuenta del pago");
+    }
 }
 
 class Tarjeta extends Pago{
@@ -195,5 +208,9 @@ class Tarjeta extends Pago{
         super(monto, fecha);
         this.tipo = tipo;
         this.numTransaccion = numTransaccion;
+    }
+    //Getters, Setters y toString
+    public void toStringTarjeta(){
+        System.out.println("Esta clase es heredera de los atributos de Pago (Monto y fecha), ademas guarda el Tipo de Tarjeta y el Numero de transaccion del pago");
     }
 }
