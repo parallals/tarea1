@@ -3,8 +3,8 @@ import java.util.Date;
 
 public class Tarea {
     public static void main(String[] args) {
-        Cliente a = new Cliente("pocoyó","21.250.675-3");
-        a.toStringCliente();
+        OrdenCompra a = new OrdenCompra();
+        System.out.println(a.toString());
     }
 }
 
@@ -13,17 +13,34 @@ class OrdenCompra{
     private String estado;
     private Cliente cliente;
     private Pago pago;
-    public void  calcPrecioSinIVA(){
-        
+    private DetalleOrden[] detalleorden;
+    public float  calcPrecioSinIVA(){
+        float n = 0;
+        for(int i=0 ; i<detalleorden.length; i++){
+            n = n + detalleorden.calcPrecioSinIVA();
+        }
+        return n;
     }
-    public void calcIVA(){
-        
+    public float calcIVA(){
+        float n = 0;
+        for(int i=0 ; i<detalleorden.length; i++){
+            n = n + detalleorden.calcIVA();
+        }
+        return n;
     }
-    public void calcPrecio(){
-        
+    public float calcPrecio(){
+        float n = 0;
+        for(int i=0 ; i<detalleorden.length; i++){
+            n = n + detalleorden.calcPrecio();
+        }
+        return n;
     }
-    public void calcPeso(){
-        
+    public float calcPeso(){
+        float n = 0;
+        for(int i=0 ; i<detalleorden.length; i++){
+            n = n + detalleorden.calcPeso();
+        }
+        return n;
     }
 }
 
@@ -50,8 +67,9 @@ class Cliente{
     public void setRut(String rut){
         this.rut = rut;
     }
-    public void toStringCliente(){
-        System.out.println("Esta clase guarda el nombre y rut del cliente");
+    @Override
+    public String toString(){
+        return "Esta clase guarda el nombre y rut del cliente";
     }
 }
 
@@ -102,8 +120,8 @@ class DocTributario{
     public void setFecha(Date fecha){
         this.fecha = fecha;
     }
-    public void toStringDocTributario(){
-        System.out.println("Esta clase hereda sus atributos (Numero, Monto y Fecha) a Boleta y Factura");
+    public String toStringDocTributario(){
+        return Esta clase hereda sus atributos (Numero, Monto y Fecha) a Boleta y Factura;
     }
 }
 
@@ -130,7 +148,7 @@ class Factura extends DocTributario{
 //______________________________Detalles de la Orden__________________________________//
 class DetalleOrden{
     private  int cantidad;
-    private Articulos[] lista_articulos;
+    private Articulo[] lista_articulos;
     public void  calcPrecio(){
         
     }
@@ -146,8 +164,8 @@ class DetalleOrden{
     public DetalleOrden(int cantidad){
         this.cantidad = cantidad;
         for(int i = 0; i < cantidad; ++i){
-            this.lista_articulos[] = new Articulos[cantidad]; 
-            }
+            this.lista_articulos = new Articulo[cantidad]; 
+        }
     }
 }
 
