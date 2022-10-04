@@ -18,28 +18,28 @@ class OrdenCompra{
     public float  calcPrecioSinIVA(){
         float n = 0;
         for(int i=0 ; i<detalleorden.length; i++){
-            n = n + detalleorden.calcPrecioSinIVA();
+            n = n + detalleorden[i].calcPrecioSinIVA();
         }
         return n;
     }
     public float calcIVA(){
         float n = 0;
         for(int i=0 ; i<detalleorden.length; i++){
-            n = n + detalleorden.calcIVA();
+            n = n + detalleorden[i].calcIVA();
         }
         return n;
     }
     public float calcPrecio(){
         float n = 0;
         for(int i=0 ; i<detalleorden.length; i++){
-            n = n + detalleorden.calcPrecio();
+            n = n + detalleorden[i].calcPrecio();
         }
         return n;
     }
     public float calcPeso(){
         float n = 0;
         for(int i=0 ; i<detalleorden.length; i++){
-            n = n + detalleorden.calcPeso();
+            n = n + detalleorden[i].calcPeso();
         }
         return n;
     }
@@ -122,7 +122,7 @@ class DocTributario{
         this.fecha = fecha;
     }
     public String toStringDocTributario(){
-        return Esta clase hereda sus atributos (Numero, Monto y Fecha) a Boleta y Factura;
+        return "Esta clase hereda sus atributos (Numero, Monto y Fecha) a Boleta y Factura";
     }
 }
 
@@ -156,12 +156,12 @@ class DetalleOrden{
     }
     public float calcPrecioSinIVA(){
         float aux1 = item.getprecio()*cantidad;
-        float iva = aux1*0.19;
+        float iva = aux1*0.19f;
         return aux1-iva;
     }
     public float calcIVA(){
         float aux1 = item.getprecio()*cantidad;
-        float iva = aux1*0.19;        
+        float iva = aux1*0.19f;        
         return iva;
     }
     public float calcPeso(){
