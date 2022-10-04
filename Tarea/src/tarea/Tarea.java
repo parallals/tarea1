@@ -1,5 +1,6 @@
 package tarea;
 import java.util.Date;
+import java.util.ArrayList;
 
 public class Tarea {
     public static void main(String[] args) {
@@ -147,25 +148,29 @@ class Factura extends DocTributario{
 
 //______________________________Detalles de la Orden__________________________________//
 class DetalleOrden{
-    private  int cantidad;
-    private Articulo[] lista_articulos;
-    public void  calcPrecio(){
-        
+    private int cantidad;
+    private Articulo item;
+    public float  calcPrecio(){
+        float aux1 = item.getprecio()*cantidad;
+        return aux1;
     }
-    public void calcPrecioSinIVA(){
-        
+    public float calcPrecioSinIVA(){
+        float aux1 = item.getprecio()*cantidad;
+        float iva = aux1*0.19;
+        return aux1-iva;
     }
-    public void calcIVA(){
-        
+    public float calcIVA(){
+        float aux1 = item.getprecio()*cantidad;
+        float iva = aux1*0.19;        
+        return iva;
     }
-    public void calcPeso(){
-        
+    public float calcPeso(){
+        float aux2 = item.getpeso()*cantidad;
+        return aux2;
     }
-    public DetalleOrden(int cantidad){
+    public DetalleOrden(int cantidad, Articulo item){
         this.cantidad = cantidad;
-        for(int i = 0; i < cantidad; ++i){
-            this.lista_articulos = new Articulo[cantidad]; 
-        }
+        this.item = item;
     }
 }
 
@@ -174,6 +179,18 @@ class Articulo{
     private String nombre;
     private String descripcion;
     private float precio;
+    public float getprecio(){
+        return precio;
+    }
+    public float getpeso(){
+        return peso;
+    }
+    public Articulo(float peso, String nombre, String descripcion, float precio){
+        this.peso = peso;
+        this.nombre = nombre;
+        this.descripcion = descripcion;
+        this.precio = precio;
+    }
 }
 //______________________________Informacion del Pago__________________________________//
 class Pago{
