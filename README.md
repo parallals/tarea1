@@ -1,3 +1,3 @@
 # tarea1
--Francy Jelvez
+-Francy Pilar Jelvez Jen
 -Diego Joaquín Andrés Venegas Anabalón
