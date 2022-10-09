@@ -42,10 +42,10 @@ class OrdenCompra{
     private String estado;
     private DetalleOrden[] detalleorden;
     private Cliente cliente;
-    private Pago pago;
+    private ArrayList<Pago> pago;
     //Metodos
     
-    public OrdenCompra(DocTributario doctributario, DetalleOrden[] detalleorden, Cliente cliente, ArrayList pago){
+    public OrdenCompra(DocTributario doctributario, DetalleOrden[] detalleorden, Cliente cliente, ArrayList<Pago> pago){
         this.fecha = doctributario.getFecha();
         this.estado = "Pendiente";
         for (int j = 0; j > detalleorden.length ; j++){
@@ -54,7 +54,21 @@ class OrdenCompra{
         this.cliente = cliente;
         this.pago = pago;
     }
-    
+    public void verificarEstado(){
+        float aux = 0;
+        for(int i=0 ; i<detalleorden.length ; i++){
+            aux = aux + detalleorden[i].calcPrecio();
+        }
+        Pago aux1;
+        float monto = 0;
+        for(int i = 0; i<pago.size();++i){
+            aux1 = pago.get(i);
+            monto = monto + aux1.getMonto();
+        }
+        if(calcPrecio()<= monto){
+            estado = "Pagado";
+        }
+    }
     public float calcPrecioSinIVA(){
         float aux = 0;
         for(int i=0 ; i<detalleorden.length ; i++){
