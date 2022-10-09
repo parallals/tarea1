@@ -16,8 +16,12 @@ public class Tarea {
         DetalleOrden det3 = new DetalleOrden(1, art3);
         DetalleOrden det4 = new DetalleOrden(4, art4);
         DetalleOrden det5 = new DetalleOrden(2, art5);
+        Direccion adress1 = new Direccion(" no se aaaaah 1");
+        Direccion adress2 = new Direccion(" no se aaaaah 2");
         Cliente diego1 = new Cliente("Diego bueno que escribe el Detalle","21222222-2");
-        Cliente diego2 = new Cliente("Diego malo que insiste en no usar ArrayList","21222222-3");
+        Cliente diego2 = new Cliente("Diego malo que insiste en no usar ArrayList (Esto es falso)","21222222-3");
+        diego1.setDireccion(adress1);
+        diego2.setDireccion(adress2);
         Efectivo pagoEf1 = new Efectivo(100, date2);
         Efectivo pagoEf2 = new Efectivo(50000, date2);
         Transferencia pagoTr = new Transferencia("Banco Estado", "12919292",2000, date2);
@@ -41,9 +45,9 @@ class OrdenCompra{
     private Pago pago;
     //Metodos
     
-    public OrdenCompra(Date fecha, String estado, DetalleOrden[] detalleorden, Cliente cliente, Pago pago){
-        this.fecha = fecha;
-        this.estado = estado;
+    public OrdenCompra(DocTributario doctributario, DetalleOrden[] detalleorden, Cliente cliente, ArrayList pago){
+        this.fecha = doctributario.getFecha();
+        this.estado = "Pendiente";
         for (int j = 0; j > detalleorden.length ; j++){
         this.detalleorden[j] = detalleorden[j];
         }
@@ -113,6 +117,13 @@ class Cliente{
     public Cliente(String nombre, String rut){
         this.nombre = nombre;
         this.rut = rut;
+        this.direccion = null;
+    }
+    public void setDireccion(Direccion direccion){
+        this.direccion = direccion;
+    }
+    public String getDireccion(){
+        return direccion.getDireccion();
     }
     //Getters, Setters y toString
     public String getNombre(){
@@ -155,20 +166,20 @@ class Direccion{
 
 abstract class DocTributario{
     //Propiedades
-    protected String numero;
-    protected String rut;             // En clases abstract usaremos protected en vez de private, puesto que simplifica mas las cosas y no es necesario usar getters.
-    protected Date fecha;
-    protected Cliente cliente;
+    private String direccion;
+    private String rut;
+    private Date fecha;
     //Metodos
-    public DocTributario(String numero, String rut, Date fecha, Cliente cliente){
-        this.numero = numero;
-        this.rut = rut;
+    public DocTributario(Date fecha){
         this.fecha = fecha;
-        this.cliente = cliente;
+    }
+    public void getCliente(Cliente cliente){
+        this.direccion = cliente.getDireccion();
+        this.rut = cliente.getRut();
     }
     //Getters, Setters
-    public String getNumero(){
-        return numero;
+    public String getDireccion(){
+        return direccion;
     }
     public String getRut(){
         return rut;
@@ -176,8 +187,8 @@ abstract class DocTributario{
     public Date getFecha(){
         return fecha;
     }
-    public void setNumero(String numero){
-        this.numero = numero;
+    public void setDireccion(String direccion){
+        this.direccion = direccion;
     }
     public void setRut(String rut){
         this.rut = rut;
@@ -185,32 +196,27 @@ abstract class DocTributario{
     public void setFecha(Date fecha){
         this.fecha = fecha;
     }
-    
-    @Override
-    public String toString(){
-        return "Esta clase guarda:  -Numero:"+numero+" -Rut:"+rut+" -Fecha:"+fecha+" -Cliente:"+cliente+"  de la clase DocTributario";
-    }
 }
 
 class Boleta extends DocTributario{
-    public Boleta(String numero, String rut, Date Fecha, Cliente cliente){
-        super(numero, rut, Fecha, cliente);      
+    public Boleta(){
+        super(new Date());      
     }
     //toString
     @Override
     public String toString(){
-        return "Esta clase guarda:  -Numero:"+numero+" -RUT:"+rut+" -Fecha: "+fecha+"  de la clase Boleta";
+        return "Esta clase guarda:  -Direccion:"+getDireccion()+" -RUT:"+getRut()+" -Fecha: "+getFecha()+"  de la clase Boleta";
     }
 }
 
 class Factura extends DocTributario{
-    public Factura(String numero, String rut, Date Fecha, Cliente cliente){
-        super(numero, rut, Fecha, cliente); 
+    public Factura(Date fecha){
+        super(new Date());      
     }
     //toString
     @Override
     public String toString(){
-        return "Esta clase guarda:  -Numero:"+numero+" -RUT:"+rut+" -Fecha: "+fecha+"  de la clase Factura";
+        return "Esta clase guarda:  -direccion:"+getDireccion()+" -RUT:"+getRut()+" -Fecha: "+getFecha()+"  de la clase Factura";
     }
 }
 
@@ -295,8 +301,8 @@ class Articulo{
 //______________________________Informacion del Pago__________________________________//
 abstract class Pago{
     //Propiedades
-    protected float monto;             // En clases abstract usaremos protected en vez de private, puesto que simplifica mas las cosas y no es necesario usar getters.
-    protected Date fecha;
+    private  float monto;
+    private  Date fecha;
     private OrdenCompra ordencompra;
     //Metodos
     public Pago(float monto, Date fecha){
@@ -337,7 +343,7 @@ class Efectivo extends Pago{
     //toString
     @Override
     public String toString(){
-        return "Esta clase guarda:  -Monto:"+monto+" -Fecha:"+fecha+"  de la clase Efectivo";
+        return "Esta clase guarda:  -Monto:"+getMonto()+" -Fecha:"+getFecha()+"  de la clase Efectivo";
     }
 }
 
@@ -365,7 +371,7 @@ class Transferencia extends Pago{    //Propiedades
     }
     @Override
     public String toString(){
-        return "Esta clase guarda:  -Monto:"+monto+" -Fecha:"+fecha+" -Banco:"+banco+" -NumeroCuenta:"+numCuenta+"  de la clase Transferencia";
+        return "Esta clase guarda:  -Monto:"+getMonto()+" -Fecha:"+getFecha()+" -Banco:"+banco+" -NumeroCuenta:"+numCuenta+"  de la clase Transferencia";
     }
 }
 
@@ -394,6 +400,6 @@ class Tarjeta extends Pago{
     }
     @Override
     public String toString(){
-        return "Esta clase guarda:  -Monto:"+monto+" -Fecha:"+fecha+" -Tipo:"+tipo+" -NumeroTransaccion:"+numtransaccion+"  de la clase Tarjeta";
+        return "Esta clase guarda:  -Monto:"+getMonto()+" -Fecha:"+getFecha()+" -Tipo:"+tipo+" -NumeroTransaccion:"+numtransaccion+"  de la clase Tarjeta";
     }
 }
