@@ -253,6 +253,7 @@ abstract class Pago{
     //Propiedades
     protected float monto;             // En clases abstract usaremos protected en vez de private, puesto que simplifica mas las cosas y no es necesario usar getters.
     protected Date fecha;
+    private OrdenCompra ordencompra;
     //Metodos
     public Pago(float monto, Date fecha){
         this.monto = monto;
@@ -265,18 +266,26 @@ abstract class Pago{
     public Date getFecha(){
         return fecha;
     }
+    public OrdenCompra getOrdenCompra(){
+        return ordencompra;
+    }    
     public void setMonto(float peso){
         this.monto = monto;
     }
     public void setFecha(Date fecha){
         this.fecha = fecha;
     }
+    public void setOrdenCompra(OrdenCompra ordencompra){
+        this.ordencompra = ordencompra;
+    }
 }
 
 class Efectivo extends Pago{
     //Metodos
     public void calcDevolucion(){
-        
+        float aux1;
+        OrdenCompra aux2 = getOrdenCompra();
+        aux1 = monto - aux2.calcPrecio();
     }
     public Efectivo(float monto, Date fecha){
         super(monto, fecha);
