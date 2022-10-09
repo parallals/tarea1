@@ -1,57 +1,78 @@
 package tarea;
 import java.util.Date;
 import java.util.ArrayList;
-//a
 
 public class Tarea {
     public static void main(String[] args) {
-        OrdenCompra a = new OrdenCompra();
+        OrdenCompra oc1 = new OrdenCompra();
+        OrdenCompra oc2 = new OrdenCompra();
+        OrdenCompra oc3 = new OrdenCompra();        
         System.out.println(a.toString());
     }
 }
 
 class OrdenCompra{
+    //Propiedades
     private Date fecha;
     private String estado;
+    private DetalleOrden[] detalleorden;
     private Cliente cliente;
     private Pago pago;
-    private DetalleOrden[] detalleorden;
+    //Metodos
     public float  calcPrecioSinIVA(){
-        float n = 0;
-        for(int i=0 ; i<detalleorden.length; i++){
-            n = n + detalleorden[i].calcPrecioSinIVA();
+        float aux = 0;
+        for(int i=0 ; i<detalleorden.length ; i++){
+            aux = aux + detalleorden[i].calcPrecioSinIVA();
         }
-        return n;
+        return aux;
     }
     public float calcIVA(){
-        float n = 0;
-        for(int i=0 ; i<detalleorden.length; i++){
-            n = n + detalleorden[i].calcIVA();
+        float aux = 0;
+        for(int i=0 ; i<detalleorden.length ; i++){
+            aux = aux + detalleorden[i].calcIVA();
         }
-        return n;
+        return aux;
     }
     public float calcPrecio(){
-        float n = 0;
-        for(int i=0 ; i<detalleorden.length; i++){
-            n = n + detalleorden[i].calcPrecio();
+        float aux = 0;
+        for(int i=0 ; i<detalleorden.length ; i++){
+            aux = aux + detalleorden[i].calcPrecio();
         }
-        return n;
+        return aux;
     }
     public float calcPeso(){
-        float n = 0;
-        for(int i=0 ; i<detalleorden.length; i++){
-            n = n + detalleorden[i].calcPeso();
+        float aux = 0;
+        for(int i=0 ; i<detalleorden.length ; i++){
+            aux = aux + detalleorden[i].calcPeso();
         }
-        return n;
+        return aux;
+    }
+    //Getters, Setters y toString
+    public Date getFecha(){
+        return fecha;
+    }
+    public String getEstado(){
+        return estado;
+    }
+    public void setFecha(Date fecha){
+        this.fecha = fecha;
+    }
+    public void setEstado(String estado){
+        this.estado = estado;
+    }
+    @Override
+    public String toString(){
+        return "Esta clase guarda:  -Fecha:"+fecha+" -Estado:"+estado+"  de la clase OrdenCompra";
     }
 }
 
 //______________________________Informacion Personal__________________________________//
 class Cliente{
+    //Propiedades
     private String nombre;
     private String rut;
     private Direccion direccion;
-    
+    //Metodos
     public Cliente(String nombre, String rut){
         this.nombre = nombre;
         this.rut = rut;
@@ -71,14 +92,14 @@ class Cliente{
     }
     @Override
     public String toString(){
-        return "Esta clase guarda el nombre y rut del cliente";
+        return "Esta clase guarda:  -Nombre:"+nombre+" -RUT:"+rut+"  de la clase Cliente";
     }
 }
 
 class Direccion{
+    //Propiedades
     private String direccion;
-    private DocTributario doctributario;
-    
+    //Metodos
     public Direccion(String direccion){
         this.direccion = direccion;
     }
@@ -89,21 +110,26 @@ class Direccion{
     public void setDireccion(String direccion){
         this.direccion = direccion;
     }
-    public void toStringDireccion(){
-        System.out.println("Esta clase guarda la direccion del cliente");
+    @Override
+    public String toString(){
+        return "Esta clase guarda:  -Direccion:"+direccion+"  de la clase Direccion";
     }
 }
 
-class DocTributario{
-    private String numero;
-    private String rut;
-    private Date fecha;
-    public DocTributario(String numero, String rut, Date fecha){
+abstract class DocTributario{
+    //Propiedades
+    protected String numero;
+    protected String rut;             // En clases abstract usaremos protected en vez de private, puesto que simplifica mas las cosas y no es necesario usar getters.
+    protected Date fecha;
+    protected Cliente cliente;
+    //Metodos
+    public DocTributario(String numero, String rut, Date fecha, Cliente cliente){
         this.numero = numero;
         this.rut = rut;
         this.fecha = fecha;
+        this.cliente = cliente;
     }
-    //Getters, Setters y toString
+    //Getters, Setters
     public String getNumero(){
         return numero;
     }
@@ -122,131 +148,211 @@ class DocTributario{
     public void setFecha(Date fecha){
         this.fecha = fecha;
     }
-    public String toStringDocTributario(){
-        return "Esta clase hereda sus atributos (Numero, Monto y Fecha) a Boleta y Factura";
-    }
 }
 
 class Boleta extends DocTributario{
-    public Boleta(String numero, String rut, Date Fecha){
-        super(numero, rut, Fecha);      
+    public Boleta(String numero, String rut, Date Fecha, Cliente cliente){
+        super(numero, rut, Fecha, cliente);      
     }
-    //Getters, Setters y toString
-    public void toStringBoleta(){
-        System.out.println("Esta clase es heredera de los atributos de DocTributario (Numero, Monto y Fecha)");
+    //toString
+    @Override
+    public String toString(){
+        return "Esta clase guarda:  -Numero:"+numero+" -RUT:"+rut+" -Fecha: "+fecha+"  de la clase Boleta";
     }
 }
 
 class Factura extends DocTributario{
-    public Factura(String numero, String rut, Date Fecha){
-        super(numero, rut, Fecha); 
+    public Factura(String numero, String rut, Date Fecha, Cliente cliente){
+        super(numero, rut, Fecha, cliente); 
     }
-    //Getters, Setters y toString
-    public void toStringFactura(){
-        System.out.println("Esta clase es heredera de los atributos de DocTributario (Numero, Monto y Fecha)");
+    //toString
+    @Override
+    public String toString(){
+        return "Esta clase guarda:  -Numero:"+numero+" -RUT:"+rut+" -Fecha: "+fecha+"  de la clase Factura";
     }
 }
 
 //______________________________Detalles de la Orden__________________________________//
 class DetalleOrden{
+    //Propiedades
     private int cantidad;
-    private Articulo item;
+    private Articulo articulos;
+    //Metodos
     public float  calcPrecio(){
-        float aux1 = item.getprecio()*cantidad;
-        return aux1;
+        return articulos.getPrecio() * cantidad * 1.19f;
     }
     public float calcPrecioSinIVA(){
-        float aux1 = item.getprecio()*cantidad;
-        float iva = aux1*0.19f;
-        return aux1-iva;
+        return articulos.getPrecio() * cantidad;
     }
     public float calcIVA(){
-        float aux1 = item.getprecio()*cantidad;
-        float iva = aux1*0.19f;        
-        return iva;
+        return articulos.getPrecio() * cantidad * 0.19f;
     }
     public float calcPeso(){
-        float aux2 = item.getpeso()*cantidad;
-        return aux2;
+        return articulos.getPeso()*cantidad;
     }
-    public DetalleOrden(int cantidad, Articulo item){
+    public DetalleOrden(int cantidad, Articulo articulos){
         this.cantidad = cantidad;
-        this.item = item;
+        this.articulos = articulos;
+    }
+    //Getters, Setters y toString
+    public int getCantidad(){
+        return cantidad;
+    }
+    public void setCantidad(int cantidad){
+        this.cantidad = cantidad;
+    }
+    @Override
+    public String toString(){
+        return "Esta clase guarda:  -Peso:"+cantidad+"  de la clase DetalleOrden";
     }
 }
 
 class Articulo{
+    //Propiedades
     private  float peso;
     private String nombre;
     private String descripcion;
     private float precio;
-    public float getprecio(){
-        return precio;
-    }
-    public float getpeso(){
-        return peso;
-    }
+    //Metodos
     public Articulo(float peso, String nombre, String descripcion, float precio){
         this.peso = peso;
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.precio = precio;
     }
+    //Getters, Setters y toString
+    public float getPeso(){
+        return peso;
+    }
+    public String getNombre(){
+        return nombre;
+    }
+    public String getDescripcion(){
+        return descripcion;
+    }
+    public float getPrecio(){
+        return precio;
+    }
+    public void setPeso(float peso){
+        this.peso = peso;
+    }
+    public void setNombre(String nombre){
+        this.nombre = nombre;
+    }
+    public void setDescripcion(String descripcion){
+        this.descripcion = descripcion;
+    }
+    public void setPrecio(float precio){
+        this.precio = precio;
+    }
+    @Override
+    public String toString(){
+        return "Esta clase guarda:  -Peso:"+peso+" -Nombre:"+nombre+" -Descripcion: "+descripcion+" -Precio:"+precio+"  de la clase Articulo";
+    }
 }
 //______________________________Informacion del Pago__________________________________//
-class Pago{
-    private float monto;
-    private Date fecha;
+abstract class Pago{
+    //Propiedades
+    protected float monto;             // En clases abstract usaremos protected en vez de private, puesto que simplifica mas las cosas y no es necesario usar getters.
+    protected Date fecha;
+    private OrdenCompra ordencompra;
+    //Metodos
     public Pago(float monto, Date fecha){
         this.monto = monto;
         this.fecha = fecha;
     }
-    //Getters, Setters y toString
-    public void toStringTarjeta(){
-        System.out.println("Esta clase hereda sus atributos (Monto y Fecha) a Efectivo, Transferencia y Tarjeta");
+    //Getters, Setters
+     public float getMonto(){
+        return monto;
+    }
+    public Date getFecha(){
+        return fecha;
+    }
+    public OrdenCompra getOrdenCompra(){
+        return ordencompra;
+    }    
+    public void setMonto(float peso){
+        this.monto = monto;
+    }
+    public void setFecha(Date fecha){
+        this.fecha = fecha;
+    }
+    public void setOrdenCompra(OrdenCompra ordencompra){
+        this.ordencompra = ordencompra;
     }
 }
 
 class Efectivo extends Pago{
+    //Metodos
     public void calcDevolucion(){
-        
+        float aux1;
+        OrdenCompra aux2 = getOrdenCompra();
+        aux1 = monto - aux2.calcPrecio();
     }
-    
     public Efectivo(float monto, Date fecha){
         super(monto, fecha);
     }
-    //Getters, Setters y toString
-    public void toStringEfectivo(){
-        System.out.println("Esta clase es heredera de los atributos de Pago (Monto y fecha), ademas tiene un metodo para calcular la Devolucion del pago");
+    //toString
+    @Override
+    public String toString(){
+        return "Esta clase guarda:  -Monto:"+monto+" -Fecha:"+fecha+"  de la clase Efectivo";
     }
 }
 
 class Tranferencia extends Pago{
+    //Propiedades
     private String banco;
     private String numCuenta;
-    
+    //Metodos
     public Tranferencia(String banco, String numCuenta, float monto, Date fecha){
         super(monto, fecha);
         this.banco = banco;
         this.numCuenta = numCuenta;
     }
     //Getters, Setters y toString
-    public void toStringTransferencia(){
-        System.out.println("Esta clase es heredera de los atributos de Pago (Monto y fecha), ademas guarda el Banco y el Numero de Cuenta del pago");
+     public String getBanco(){
+        return banco;
+    }
+    public String getNumCuenta(){
+        return numCuenta;
+    }
+    public void setBanco(String banco){
+        this.banco = banco;
+    }
+    public void setNumCuenta(String numCuenta){
+        this.numCuenta = numCuenta;
+    }
+    @Override
+    public String toString(){
+        return "Esta clase guarda:  -Monto:"+monto+" -Fecha:"+fecha+" -Banco:"+banco+" -NumeroCuenta:"+numCuenta+"  de la clase Transferencia";
     }
 }
 
 class Tarjeta extends Pago{
+    //Propiedades
     private String tipo;
-    private String numTransaccion;
-    
-    public Tarjeta(String tipo, String numTransaccion, float monto, Date fecha){
+    private String numtransaccion;
+    //Metodos
+    public Tarjeta(String tipo, String numtransaccion, float monto, Date fecha){
         super(monto, fecha);
         this.tipo = tipo;
-        this.numTransaccion = numTransaccion;
+        this.numtransaccion = numtransaccion;
     }
     //Getters, Setters y toString
-    public void toStringTarjeta(){
-        System.out.println("Esta clase es heredera de los atributos de Pago (Monto y fecha), ademas guarda el Tipo de Tarjeta y el Numero de transaccion del pago");
+    public String getTipo(){
+        return tipo;
+    }
+    public String getNumTransaccion(){
+        return numtransaccion;
+    }
+    public void setTipo(String tipo){
+        this.tipo = tipo;
+    }
+    public void setNumTransaccion(String numtransaccion){
+        this.numtransaccion = numtransaccion;
+    }
+    @Override
+    public String toString(){
+        return "Esta clase guarda:  -Monto:"+monto+" -Fecha:"+fecha+" -Tipo:"+tipo+" -NumeroTransaccion:"+numtransaccion+"  de la clase Tarjeta";
     }
 }
