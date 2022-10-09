@@ -50,7 +50,12 @@ class OrdenCompra{
         this.cliente = cliente;
         this.pago = pago;
     }
-    
+    public void verificarPago(){
+        float monto = pago.getMonto();
+        if(calcPrecio()<= monto){
+            estado = "Pagado";
+        }
+    }
     public float calcPrecioSinIVA(){
         float aux = 0;
         for(int i=0 ; i<detalleorden.length ; i++){
