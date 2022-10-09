@@ -4,8 +4,31 @@ import java.util.ArrayList;
 
 public class Tarea {
     public static void main(String[] args) {
-        OrdenCompra a = new OrdenCompra();
-        System.out.println(a.toString());
+        Date date1 = new Date();
+        Date date2 = new Date();
+        Articulo art1 = new Articulo(1,"jugo","de piña",3000);
+        Articulo art2 = new Articulo(2,"papas","kryzpo",2000);
+        Articulo art3 = new Articulo(3,"Tarjeta de video Nvidia Zotac Gaming GForce GTX 16 Series","and knuckles",30000);
+        Articulo art4 = new Articulo(4,"Un Frugele","el rojo",100);
+        Articulo art5 = new Articulo(3,"Completo","Papapleto",1000);
+        DetalleOrden det1 = new DetalleOrden(3, art1);
+        DetalleOrden det2 = new DetalleOrden(5, art2);
+        DetalleOrden det3 = new DetalleOrden(1, art3);
+        DetalleOrden det4 = new DetalleOrden(4, art4);
+        DetalleOrden det5 = new DetalleOrden(2, art5);
+        Cliente diego1 = new Cliente("Diego bueno que escribe el Detalle","21222222-2");
+        Cliente diego2 = new Cliente("Diego malo que insiste en no usar ArrayList","21222222-3");
+        Efectivo pagoEf1 = new Efectivo(100, date2);
+        Efectivo pagoEf2 = new Efectivo(50000, date2);
+        Transferencia pagoTr = new Transferencia("Banco Estado", "12919292",2000, date2);
+        Tarjeta pagoTa = new Tarjeta("Banco Fallabella", "i1238", 20500, date2);
+        DetalleOrden[] lista1 = {det1,det2,det3};
+        DetalleOrden[] lista2 = {det4,det5};
+        DetalleOrden[] lista3 = {det1,det2,det3,det4,det5};        
+        OrdenCompra oc1 = new OrdenCompra(date1, "Pendiente", lista1, diego1, pagoTr);
+        OrdenCompra oc2 = new OrdenCompra(date1, "Pendiente", lista2, diego2, pagoEf1);
+        OrdenCompra oc3 = new OrdenCompra(date2, "Pendiente", lista3, diego2, pagoEf2);        
+        System.out.println(det1.toString());
     }
 }
 
@@ -17,7 +40,18 @@ class OrdenCompra{
     private Cliente cliente;
     private Pago pago;
     //Metodos
-    public float  calcPrecioSinIVA(){
+    
+    public OrdenCompra(Date fecha, String estado, DetalleOrden[] detalleorden, Cliente cliente, Pago pago){
+        this.fecha = fecha;
+        this.estado = estado;
+        for (int j = 0; j > detalleorden.length ; j++){
+        this.detalleorden[j] = detalleorden[j];
+        }
+        this.cliente = cliente;
+        this.pago = pago;
+    }
+    
+    public float calcPrecioSinIVA(){
         float aux = 0;
         for(int i=0 ; i<detalleorden.length ; i++){
             aux = aux + detalleorden[i].calcPrecioSinIVA();
@@ -146,6 +180,11 @@ abstract class DocTributario{
     public void setFecha(Date fecha){
         this.fecha = fecha;
     }
+    
+    @Override
+    public String toString(){
+        return "Esta clase guarda:  -Numero:"+numero+" -Rut:"+rut+" -Fecha:"+fecha+" -Cliente:"+cliente+"  de la clase DocTributario";
+    }
 }
 
 class Boleta extends DocTributario{
@@ -201,7 +240,7 @@ class DetalleOrden{
     }
     @Override
     public String toString(){
-        return "Esta clase guarda:  -Peso:"+cantidad+"  de la clase DetalleOrden";
+        return "Esta clase guarda:  -Cantidad:"+cantidad+ " -Artículo:"+articulos+"  de la clase DetalleOrden";
     }
 }
 
@@ -297,12 +336,11 @@ class Efectivo extends Pago{
     }
 }
 
-class Tranferencia extends Pago{
-    //Propiedades
+class Transferencia extends Pago{    //Propiedades
     private String banco;
     private String numCuenta;
     //Metodos
-    public Tranferencia(String banco, String numCuenta, float monto, Date fecha){
+    public Transferencia(String banco, String numCuenta, float monto, Date fecha){
         super(monto, fecha);
         this.banco = banco;
         this.numCuenta = numCuenta;
