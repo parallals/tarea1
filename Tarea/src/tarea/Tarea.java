@@ -300,9 +300,9 @@ abstract class Pago{
     private  Date fecha;
     private OrdenCompra ordencompra;
     //Metodos
-    public Pago(float monto, Date fecha){
+    public Pago(float monto){
         this.monto = monto;
-        this.fecha = fecha;
+        this.fecha = new Date;
     }
     //Getters, Setters
      public float getMonto(){
