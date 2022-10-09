@@ -4,35 +4,57 @@ import java.util.ArrayList;
 
 public class Tarea {
     public static void main(String[] args) {
-        Date date1 = new Date();
-        Date date2 = new Date();
+
         Articulo art1 = new Articulo(1,"jugo","de piña",3000);
         Articulo art2 = new Articulo(2,"papas","kryzpo",2000);
         Articulo art3 = new Articulo(3,"Tarjeta de video Nvidia Zotac Gaming GForce GTX 16 Series","and knuckles",30000);
         Articulo art4 = new Articulo(4,"Un Frugele","el rojo",100);
         Articulo art5 = new Articulo(3,"Completo","Papapleto",1000);
+        
         DetalleOrden det1 = new DetalleOrden(3, art1);
         DetalleOrden det2 = new DetalleOrden(5, art2);
         DetalleOrden det3 = new DetalleOrden(1, art3);
         DetalleOrden det4 = new DetalleOrden(4, art4);
         DetalleOrden det5 = new DetalleOrden(2, art5);
+        
         Direccion adress1 = new Direccion(" no se aaaaah 1");
         Direccion adress2 = new Direccion(" no se aaaaah 2");
+        
         Cliente diego1 = new Cliente("Diego bueno que escribe el Detalle","21222222-2");
-        Cliente diego2 = new Cliente("Diego malo que insiste en no usar ArrayList (Esto es falso)","21222222-3");
+        Cliente diego2 = new Cliente("Diego malo que insiste en no usar ArrayList (Esto es verdadero)","21222222-3");
         diego1.setDireccion(adress1);
         diego2.setDireccion(adress2);
-        Efectivo pagoEf1 = new Efectivo(100, date2);
-        Efectivo pagoEf2 = new Efectivo(50000, date2);
-        Transferencia pagoTr = new Transferencia("Banco Estado", "12919292",2000, date2);
-        Tarjeta pagoTa = new Tarjeta("Banco Fallabella", "i1238", 20500, date2);
-        DetalleOrden[] lista1 = {det1,det2,det3};
+        
+        Boleta bol = new Boleta();
+        bol.setCliente(diego1);
+        Factura fac = new Factura();
+        fac.setCliente(diego2);
+        
+        Efectivo pagoEf1 = new Efectivo(10000); //Pagos
+        Efectivo pagoEf2 = new Efectivo(50000);
+        Transferencia pagoTr = new Transferencia("Banco Estado", "12919292",2000);
+        Tarjeta pagoTa = new Tarjeta("Banco Fallabella", "i1238", 20500);
+        
+        DetalleOrden[] lista1 = new DetalleOrden[3];
+        lista1[0] = det1;
+        lista1[1] = det2;
+        lista1[2] = det3;
         DetalleOrden[] lista2 = {det4,det5};
-        DetalleOrden[] lista3 = {det1,det2,det3,det4,det5};        
-        OrdenCompra oc1 = new OrdenCompra(date1, "Pendiente", lista1, diego1, pagoTr);
-        OrdenCompra oc2 = new OrdenCompra(date1, "Pendiente", lista2, diego2, pagoEf1);
-        OrdenCompra oc3 = new OrdenCompra(date2, "Pendiente", lista3, diego2, pagoEf2);        
-        System.out.println(det1.toString());
+        DetalleOrden[] lista3 = {det1,det2,det3,det4,det5};
+        ArrayList<Pago> pago1 = new ArrayList();
+        pago1.add(pagoEf1);
+        pago1.add(pagoEf2);
+        ArrayList<Pago> pago2 = new ArrayList();
+        pago2.add(pagoTa);
+        pago2.add(pagoTr);
+        OrdenCompra oc1 = new OrdenCompra(bol,lista1,diego1,pago1); //Boleta, pago 60000, diego1, 
+        OrdenCompra oc2 = new OrdenCompra(fac,lista2,diego2,pago2);
+        OrdenCompra oc3 = new OrdenCompra(bol,lista2,diego1,pago1);        
+        oc1.verificarEstado();
+        System.out.println(oc1.getEstado());
+        oc2.verificarEstado();
+        System.out.println(oc2.getEstado());
+        System.out.println(oc2.toString());
     }
 }
 
@@ -48,25 +70,26 @@ class OrdenCompra{
     public OrdenCompra(DocTributario doctributario, DetalleOrden[] detalleorden, Cliente cliente, ArrayList<Pago> pago){
         this.fecha = doctributario.getFecha();
         this.estado = "Pendiente";
-        for (int j = 0; j > detalleorden.length ; j++){
-        this.detalleorden[j] = detalleorden[j];
-        }
+        this.detalleorden = detalleorden;
         this.cliente = cliente;
         this.pago = pago;
     }
     public void verificarEstado(){
-        float aux = 0;
+        float aux = 0; //A pagar
         for(int i=0 ; i<detalleorden.length ; i++){
             aux = aux + detalleorden[i].calcPrecio();
         }
         Pago aux1;
-        float monto = 0;
+        float monto = 0; //Pago del cliente
         for(int i = 0; i<pago.size();++i){
             aux1 = pago.get(i);
             monto = monto + aux1.getMonto();
         }
-        if(calcPrecio()<= monto){
+        if(aux <= monto){
             estado = "Pagado";
+        }
+        else{
+            estado = "Pendiente";
         }
     }
     public float calcPrecioSinIVA(){
@@ -182,7 +205,7 @@ abstract class DocTributario{
     public DocTributario(Date fecha){
         this.fecha = fecha;
     }
-    public void getCliente(Cliente cliente){
+    public void setCliente(Cliente cliente){
         this.direccion = cliente.getDireccion();
         this.rut = cliente.getRut();
     }
@@ -219,7 +242,7 @@ class Boleta extends DocTributario{
 }
 
 class Factura extends DocTributario{
-    public Factura(Date fecha){
+    public Factura(){
         super(new Date());      
     }
     //toString
@@ -344,10 +367,10 @@ class Efectivo extends Pago{
     public void calcDevolucion(){
         float aux1;
         OrdenCompra aux2 = getOrdenCompra();
-        aux1 = monto - aux2.calcPrecio();
+        aux1 = getMonto() - aux2.calcPrecio();
     }
-    public Efectivo(float monto, Date fecha){
-        super(monto, fecha);
+    public Efectivo(float monto){
+        super(monto, new Date());
     }
     //toString
     @Override
@@ -360,10 +383,11 @@ class Transferencia extends Pago{    //Propiedades
     private String banco;
     private String numCuenta;
     //Metodos
-    public Transferencia(String banco, String numCuenta, float monto, Date fecha){
-        super(monto, fecha);
+    public Transferencia(String banco, String numCuenta, float monto){
+        super(monto, new Date());
         this.banco = banco;
         this.numCuenta = numCuenta;
+        
     }
     //Getters, Setters y toString
      public String getBanco(){
@@ -389,8 +413,8 @@ class Tarjeta extends Pago{
     private String tipo;
     private String numtransaccion;
     //Metodos
-    public Tarjeta(String tipo, String numtransaccion, float monto, Date fecha){
-        super(monto, fecha);
+    public Tarjeta(String tipo, String numtransaccion, float monto){
+        super(monto, new Date());
         this.tipo = tipo;
         this.numtransaccion = numtransaccion;
     }
