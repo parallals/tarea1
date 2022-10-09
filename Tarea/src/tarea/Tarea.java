@@ -11,38 +11,57 @@ public class Tarea {
 }
 
 class OrdenCompra{
+    //Propiedades
     private Date fecha;
     private String estado;
+    private DetalleOrden[] detalleorden;
     private Cliente cliente;
     private Pago pago;
-    private DetalleOrden[] detalleorden;
+    //Metodos
     public float  calcPrecioSinIVA(){
-        float n = 0;
-        for(int i=0 ; i<detalleorden.length; i++){
-            n = n + detalleorden[i].calcPrecioSinIVA();
+        float aux = 0;
+        for(int i=0 ; i<detalleorden.length ; i++){
+            aux = aux + detalleorden[i].calcPrecioSinIVA();
         }
-        return n;
+        return aux;
     }
     public float calcIVA(){
-        float n = 0;
-        for(int i=0 ; i<detalleorden.length; i++){
-            n = n + detalleorden[i].calcIVA();
+        float aux = 0;
+        for(int i=0 ; i<detalleorden.length ; i++){
+            aux = aux + detalleorden[i].calcIVA();
         }
-        return n;
+        return aux;
     }
     public float calcPrecio(){
-        float n = 0;
-        for(int i=0 ; i<detalleorden.length; i++){
-            n = n + detalleorden[i].calcPrecio();
+        float aux = 0;
+        for(int i=0 ; i<detalleorden.length ; i++){
+            aux = aux + detalleorden[i].calcPrecio();
         }
-        return n;
+        return aux;
     }
     public float calcPeso(){
-        float n = 0;
-        for(int i=0 ; i<detalleorden.length; i++){
-            n = n + detalleorden[i].calcPeso();
+        float aux = 0;
+        for(int i=0 ; i<detalleorden.length ; i++){
+            aux = aux + detalleorden[i].calcPeso();
         }
-        return n;
+        return aux;
+    }
+    //Getters, Setters y toString
+    public Date getFecha(){
+        return fecha;
+    }
+    public String getEstado(){
+        return estado;
+    }
+    public void setFecha(Date fecha){
+        this.fecha = fecha;
+    }
+    public void setEstado(String estado){
+        this.estado = estado;
+    }
+    @Override
+    public String toString(){
+        return "Esta clase guarda:  -Fecha:"+fecha+" -Estado:"+estado+"  de la clase Orden de compra";
     }
 }
 
@@ -149,48 +168,80 @@ class Factura extends DocTributario{
 
 //______________________________Detalles de la Orden__________________________________//
 class DetalleOrden{
+    //Propiedades
     private int cantidad;
-    private Articulo item;
+    private Articulo articulos;
+    //Metodos
     public float  calcPrecio(){
-        float aux1 = item.getprecio()*cantidad;
-        return aux1;
+        return articulos.getPrecio() * cantidad * 1.19f;
     }
     public float calcPrecioSinIVA(){
-        float aux1 = item.getprecio()*cantidad;
-        float iva = aux1*0.19f;
-        return aux1-iva;
+        return articulos.getPrecio() * cantidad;
     }
     public float calcIVA(){
-        float aux1 = item.getprecio()*cantidad;
-        float iva = aux1*0.19f;        
-        return iva;
+        return articulos.getPrecio() * cantidad * 0.19f;
     }
     public float calcPeso(){
-        float aux2 = item.getpeso()*cantidad;
-        return aux2;
+        return articulos.getPeso()*cantidad;
     }
-    public DetalleOrden(int cantidad, Articulo item){
+    public DetalleOrden(int cantidad, Articulo articulos){
         this.cantidad = cantidad;
-        this.item = item;
+        this.articulos = articulos;
+    }
+    //Getters, Setters y toString
+    public int getCantidad(){
+        return cantidad;
+    }
+    public void setCantidad(int cantidad){
+        this.cantidad = cantidad;
+    }
+    @Override
+    public String toString(){
+        return "Esta clase guarda:  -Peso:"+cantidad+"  de la clase DetalleOrden";
     }
 }
 
 class Articulo{
+    //Propiedades
     private  float peso;
     private String nombre;
     private String descripcion;
     private float precio;
-    public float getprecio(){
-        return precio;
-    }
-    public float getpeso(){
-        return peso;
-    }
+    //Metodos
     public Articulo(float peso, String nombre, String descripcion, float precio){
         this.peso = peso;
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.precio = precio;
+    }
+    //Getters, Setters y toString
+    public float getPeso(){
+        return peso;
+    }
+    public String getNombre(){
+        return nombre;
+    }
+    public String getDescripcion(){
+        return descripcion;
+    }
+    public float getPrecio(){
+        return precio;
+    }
+    public void setPeso(float peso){
+        this.peso = peso;
+    }
+    public void setNombre(String nombre){
+        this.nombre = nombre;
+    }
+    public void setDescripcion(String descripcion){
+        this.descripcion = descripcion;
+    }
+    public void setPrecio(float precio){
+        this.precio = precio;
+    }
+    @Override
+    public String toString(){
+        return "Esta clase guarda:  -Peso:"+peso+" -Nombre:"+nombre+" -Descripcion: "+descripcion+" -Precio:"+precio+"  de la clase Articulo";
     }
 }
 //______________________________Informacion del Pago__________________________________//
