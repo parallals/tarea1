@@ -99,7 +99,7 @@ class OrdenCompra{
         this.transferencia = tranferencia;
         this.tarjeta = tarjeta;
     }
-    public void verificarEstado(){
+    public void verificarEstado(){ //Cambiar el estado, relaciona clase Pago con OrdenCompra
         float aux = 0; //A pagar
         for(int i=0 ; i<detalleorden.length ; i++){
             aux = aux + detalleorden[i].calcPrecio();
