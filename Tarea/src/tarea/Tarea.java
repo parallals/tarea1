@@ -21,7 +21,7 @@ public class Tarea {
         Direccion adress2 = new Direccion(" no se aaaaah 2");
         
         Cliente diego1 = new Cliente("Diego bueno que escribe el Detalle","21222222-2");
-        Cliente diego2 = new Cliente("Diego malo que insiste en no usar ArrayList (Esto es verdadero)","21222222-3");
+        Cliente diego2 = new Cliente("Diego malo que insiste en no usar ArrayList (Esto es FALSO)","21222222-3");
         diego1.setDireccion(adress1);
         diego2.setDireccion(adress2);
         
@@ -32,6 +32,8 @@ public class Tarea {
         
         Efectivo pagoEf1 = new Efectivo(10000); //Pagos
         Efectivo pagoEf2 = new Efectivo(50000);
+        Efectivo pagoEf3 = new Efectivo(10000); 
+        Efectivo pagoEf4 = new Efectivo(50000);
         Transferencia pagoTr = new Transferencia("Banco Estado", "12919292",2000);
         Tarjeta pagoTa = new Tarjeta("Banco Fallabella", "i1238", 20500);
         
@@ -47,11 +49,18 @@ public class Tarea {
         ArrayList<Pago> pago2 = new ArrayList();
         pago2.add(pagoTa);
         pago2.add(pagoTr);
+        ArrayList<Pago> pago3 = new ArrayList();
+        pago3.add(pagoEf3);
+        pago3.add(pagoEf4);
         OrdenCompra oc1 = new OrdenCompra(bol,lista1,diego1,pago1); //Boleta, pago 60000, diego1, 
         OrdenCompra oc2 = new OrdenCompra(fac,lista2,diego2,pago2);
-        OrdenCompra oc3 = new OrdenCompra(bol,lista2,diego1,pago1);        
+        OrdenCompra oc3 = new OrdenCompra(bol,lista2,diego1,pago3);
+        pago1.get(0).setOrdenCompra(oc1);
+        pago1.get(1).setOrdenCompra(oc1);
+        pago3.get(0).setOrdenCompra(oc2);
+        pago3.get(1).setOrdenCompra(oc2);
         oc1.verificarEstado();
-        System.out.println(oc1.getEstado());
+        System.out.println(oc1.getEstado()+", Devolucion:"+pago1.get(1).calcDevolucion());
         oc2.verificarEstado();
         System.out.println(oc2.getEstado());
         System.out.println(oc2.toString());
@@ -66,7 +75,6 @@ class OrdenCompra{
     private Cliente cliente;
     private ArrayList<Pago> pago;
     //Metodos
-    
     public OrdenCompra(DocTributario doctributario, DetalleOrden[] detalleorden, Cliente cliente, ArrayList<Pago> pago){
         this.fecha = doctributario.getFecha();
         this.estado = "Pendiente";
@@ -87,8 +95,7 @@ class OrdenCompra{
         }
         if(aux <= monto){
             estado = "Pagado";
-        }
-        else{
+        }else{
             estado = "Pendiente";
         }
     }
@@ -121,6 +128,12 @@ class OrdenCompra{
         return aux;
     }
     //Getters, Setters y toString
+    public DetalleOrden[] getDetalleOrden(){
+        return detalleorden;
+    }
+    public ArrayList<Pago> getPago(){
+        return pago;
+    }
     public Date getFecha(){
         return fecha;
     }
@@ -337,9 +350,9 @@ abstract class Pago{
     private  Date fecha;
     private OrdenCompra ordencompra;
     //Metodos
-    public Pago(float monto){
+    public Pago(float monto, Date fecha){
         this.monto = monto;
-        this.fecha = new Date;
+        this.fecha = fecha;
     }
     //Getters, Setters
      public float getMonto(){
@@ -364,10 +377,25 @@ abstract class Pago{
 
 class Efectivo extends Pago{
     //Metodos
-    public void calcDevolucion(){
-        float aux1;
-        OrdenCompra aux2 = getOrdenCompra();
-        aux1 = getMonto() - aux2.calcPrecio();
+    public float calcDevolucion(){
+        DetalleOrden[] detalleorden = new DetalleOrden[getOrdenCompra().getDetalleOrden().length];
+        detalleorden = getOrdenCompra().getDetalleOrden();
+        ArrayList<Pago> pago = getOrdenCompra().getPago();
+        float aux = 0; //A pagar
+        for(int i=0 ; i<detalleorden.length ; i++){
+            aux = aux + detalleorden[i].calcPrecio();
+        }
+        Pago aux1;
+        float monto = 0; //Pago del cliente
+        for(int i = 0; i<pago.size();++i){
+            aux1 = pago.get(i);
+            monto = monto + aux1.getMonto();
+        }
+        if(aux <= monto){
+            return monto-aux;
+        }else{
+            return 0f;
+        }
     }
     public Efectivo(float monto){
         super(monto, new Date());
