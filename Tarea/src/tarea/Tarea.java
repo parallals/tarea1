@@ -407,7 +407,7 @@ class Efectivo extends Pago{
         ArrayList<Efectivo> efectivo = getOrdenCompra().getEfectivo();
         ArrayList<Transferencia> transferencia = getOrdenCompra().getTransferencia();
         ArrayList<Tarjeta> tarjeta = getOrdenCompra().getTarjeta();
-        float aux = getOrdenCompra().calc
+        float aux = getOrdenCompra().calcPrecio();
         float monto = 0; //Pago del cliente
         for(int i = 0; i<efectivo.size() ;++i){
             monto = monto + efectivo.get(i).getMonto();
