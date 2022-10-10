@@ -29,38 +29,50 @@ public class Tarea {
         bol.setCliente(diego1);
         Factura fac = new Factura();
         fac.setCliente(diego2);
-        
-        Efectivo pagoEf1 = new Efectivo(10000); //Pagos
-        Efectivo pagoEf2 = new Efectivo(50000);
-        Efectivo pagoEf3 = new Efectivo(10000); 
-        Efectivo pagoEf4 = new Efectivo(50000);
-        Transferencia pagoTr = new Transferencia("Banco Estado", "12919292",2000);
-        Tarjeta pagoTa = new Tarjeta("Banco Fallabella", "i1238", 20500);
-        
+
         DetalleOrden[] lista1 = new DetalleOrden[3];
         lista1[0] = det1;
         lista1[1] = det2;
         lista1[2] = det3;
         DetalleOrden[] lista2 = {det4,det5};
         DetalleOrden[] lista3 = {det1,det2,det3,det4,det5};
-        ArrayList<Pago> pago1 = new ArrayList();
-        pago1.add(pagoEf1);
-        pago1.add(pagoEf2);
-        ArrayList<Pago> pago2 = new ArrayList();
-        pago2.add(pagoTa);
-        pago2.add(pagoTr);
-        ArrayList<Pago> pago3 = new ArrayList();
-        pago3.add(pagoEf3);
-        pago3.add(pagoEf4);
-        OrdenCompra oc1 = new OrdenCompra(bol,lista1,diego1,pago1); //Boleta, pago 60000, diego1, 
-        OrdenCompra oc2 = new OrdenCompra(fac,lista2,diego2,pago2);
-        OrdenCompra oc3 = new OrdenCompra(bol,lista2,diego1,pago3);
-        pago1.get(0).setOrdenCompra(oc1);
-        pago1.get(1).setOrdenCompra(oc1);
-        pago3.get(0).setOrdenCompra(oc2);
-        pago3.get(1).setOrdenCompra(oc2);
+        
+        ArrayList<Efectivo> pago11 = new ArrayList();
+        pago11.add(new Efectivo(10000));
+        pago11.add(new Efectivo(30000));
+        ArrayList<Transferencia> pago12 = new ArrayList();
+        pago12.add(new Transferencia("Banco Estado", "12919292",2000));
+        ArrayList<Tarjeta> pago13 = new ArrayList();
+        pago13.add(new Tarjeta("Banco Fallabella", "i1238", 20500));
+        
+        ArrayList<Efectivo> pago21 = new ArrayList();
+        pago21.add(new Efectivo(30000));
+        ArrayList<Transferencia> pago22 = new ArrayList();
+        pago22.add(new Transferencia("Banco Estado", "12919292",2000));
+        ArrayList<Tarjeta> pago23 = new ArrayList();
+        pago23.add(new Tarjeta("Banco Fallabella", "i1238", 20500));
+        
+        ArrayList<Efectivo> pago31 = new ArrayList();
+        pago31.add(new Efectivo(7777777));
+        ArrayList<Transferencia> pago32 = new ArrayList();
+        pago32.add(new Transferencia("Banco Estado", "12919292",1));
+        ArrayList<Tarjeta> pago33 = new ArrayList();
+        pago33.add(new Tarjeta("Banco Fallabella", "i1238", 1));
+        
+        OrdenCompra oc1 = new OrdenCompra(bol, lista1, diego1, pago11, pago12, pago13); //Boleta, pago 60000, diego1, 
+        OrdenCompra oc2 = new OrdenCompra(fac, lista2, diego2, pago21, pago22, pago23);
+        OrdenCompra oc3 = new OrdenCompra(bol, lista2, diego1, pago31, pago32, pago33);
+        for(int i=0; i>pago11.size(); i++){
+            pago11.get(i).setOrdenCompra(oc1);
+        }
+        for(int i=0; i>pago21.size(); i++){
+            pago11.get(i).setOrdenCompra(oc2);
+        }
+        for(int i=0; i>pago31.size(); i++){
+            pago11.get(i).setOrdenCompra(oc3);
+        }
         oc1.verificarEstado();
-        System.out.println(oc1.getEstado()+", Devolucion:"+pago1.get(1).calcDevolucion());
+        System.out.println(oc1.getEstado()+", Devolucion:"+pago11.get(0).calcDevolucion());
         oc2.verificarEstado();
         System.out.println(oc2.getEstado());
         System.out.println(oc2.toString());
@@ -73,25 +85,33 @@ class OrdenCompra{
     private String estado;
     private DetalleOrden[] detalleorden;
     private Cliente cliente;
-    private ArrayList<Pago> pago;
+    private ArrayList<Efectivo> efectivo;
+    private ArrayList<Transferencia> transferencia;
+    private ArrayList<Tarjeta> tarjeta;
     //Metodos
-    public OrdenCompra(DocTributario doctributario, DetalleOrden[] detalleorden, Cliente cliente, ArrayList<Pago> pago){
+    public OrdenCompra(DocTributario doctributario, DetalleOrden[] detalleorden, Cliente cliente, ArrayList<Efectivo> efectivo, ArrayList<Transferencia> tranferencia, ArrayList<Tarjeta> tarjeta){
         this.fecha = doctributario.getFecha();
         this.estado = "Pendiente";
         this.detalleorden = detalleorden;
         this.cliente = cliente;
-        this.pago = pago;
+        this.efectivo = efectivo;
+        this.transferencia = tranferencia;
+        this.tarjeta = tarjeta;
     }
     public void verificarEstado(){
         float aux = 0; //A pagar
         for(int i=0 ; i<detalleorden.length ; i++){
             aux = aux + detalleorden[i].calcPrecio();
         }
-        Pago aux1;
         float monto = 0; //Pago del cliente
-        for(int i = 0; i<pago.size();++i){
-            aux1 = pago.get(i);
-            monto = monto + aux1.getMonto();
+        for(int i = 0; i<efectivo.size() ;++i){
+            monto = monto + efectivo.get(i).getMonto();
+        }
+        for(int i = 0; i<transferencia.size();++i){
+            monto = monto + transferencia.get(i).getMonto();
+        }
+        for(int i = 0; i<tarjeta.size();++i){
+            monto = monto + tarjeta.get(i).getMonto();
         }
         if(aux <= monto){
             estado = "Pagado";
@@ -131,8 +151,14 @@ class OrdenCompra{
     public DetalleOrden[] getDetalleOrden(){
         return detalleorden;
     }
-    public ArrayList<Pago> getPago(){
-        return pago;
+    public ArrayList<Efectivo> getEfectivo(){
+        return efectivo;
+    }
+    public ArrayList<Transferencia> getTransferencia(){
+        return transferencia;
+    }
+    public ArrayList<Tarjeta> getTarjeta(){
+        return tarjeta;
     }
     public Date getFecha(){
         return fecha;
@@ -378,21 +404,22 @@ abstract class Pago{
 class Efectivo extends Pago{
     //Metodos
     public float calcDevolucion(){
-        DetalleOrden[] detalleorden = new DetalleOrden[getOrdenCompra().getDetalleOrden().length];
-        detalleorden = getOrdenCompra().getDetalleOrden();
-        ArrayList<Pago> pago = getOrdenCompra().getPago();
-        float aux = 0; //A pagar
-        for(int i=0 ; i<detalleorden.length ; i++){
-            aux = aux + detalleorden[i].calcPrecio();
-        }
-        Pago aux1;
+        ArrayList<Efectivo> efectivo = getOrdenCompra().getEfectivo();
+        ArrayList<Transferencia> transferencia = getOrdenCompra().getTransferencia();
+        ArrayList<Tarjeta> tarjeta = getOrdenCompra().getTarjeta();
+        float aux = getOrdenCompra().calc
         float monto = 0; //Pago del cliente
-        for(int i = 0; i<pago.size();++i){
-            aux1 = pago.get(i);
-            monto = monto + aux1.getMonto();
+        for(int i = 0; i<efectivo.size() ;++i){
+            monto = monto + efectivo.get(i).getMonto();
+        }
+        for(int i = 0; i<transferencia.size();++i){
+            monto = monto + transferencia.get(i).getMonto();
+        }
+        for(int i = 0; i<tarjeta.size();++i){
+            monto = monto + tarjeta.get(i).getMonto();
         }
         if(aux <= monto){
-            return monto-aux;
+            return monto - aux;
         }else{
             return 0f;
         }
