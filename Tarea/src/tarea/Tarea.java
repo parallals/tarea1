@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class Tarea {
     public static void main(String[] args) {
 
-        Articulo art1 = new Articulo(1,"jugo","de piña",3000);
+        Articulo art1 = new Articulo(1,"jugo","de piÃ±a",3000);
         Articulo art2 = new Articulo(2,"papas","kryzpo",2000);
         Articulo art3 = new Articulo(3,"Tarjeta de video Nvidia Zotac Gaming GForce GTX 16 Series","and knuckles",30000);
         Articulo art4 = new Articulo(4,"Un Frugele","el rojo",100);
@@ -62,6 +62,7 @@ public class Tarea {
         OrdenCompra oc1 = new OrdenCompra(bol, lista1, diego1, pago11, pago12, pago13); //Boleta, pago 60000, diego1, 
         OrdenCompra oc2 = new OrdenCompra(fac, lista2, diego2, pago21, pago22, pago23);
         OrdenCompra oc3 = new OrdenCompra(bol, lista2, diego1, pago31, pago32, pago33);
+        pago11.get(1).setOrdenCompra(oc1);
         for(int i=0; i>pago11.size(); i++){
             pago11.get(i).setOrdenCompra(oc1);
         }
@@ -72,7 +73,7 @@ public class Tarea {
             pago11.get(i).setOrdenCompra(oc3);
         }
         oc1.verificarEstado();
-        System.out.println(oc1.getEstado()+", Devolucion:"+pago11.get(0).calcDevolucion());
+        System.out.println(oc1.getEstado()+", Devolucion:"+pago11.get(1).calcDevolucion());
         oc2.verificarEstado();
         System.out.println(oc2.getEstado());
         System.out.println(oc2.toString());
@@ -322,7 +323,7 @@ class DetalleOrden{
     }
     @Override
     public String toString(){
-        return "Esta clase guarda:  -Cantidad:"+cantidad+ " -Artículo:"+articulos+"  de la clase DetalleOrden";
+        return "Esta clase guarda:  -Cantidad:"+cantidad+ " -ArtÃ­culo:"+articulos+"  de la clase DetalleOrden";
     }
 }
 
@@ -404,10 +405,15 @@ abstract class Pago{
 class Efectivo extends Pago{
     //Metodos
     public float calcDevolucion(){
+        DetalleOrden[] detalleorden = new DetalleOrden[getOrdenCompra().getDetalleOrden().length];
+        detalleorden = getOrdenCompra().getDetalleOrden();
         ArrayList<Efectivo> efectivo = getOrdenCompra().getEfectivo();
         ArrayList<Transferencia> transferencia = getOrdenCompra().getTransferencia();
         ArrayList<Tarjeta> tarjeta = getOrdenCompra().getTarjeta();
-        float aux = getOrdenCompra().calcPrecio();
+        float aux = 0; //A pagar
+        for(int i=0 ; i<detalleorden.length ; i++){
+            aux = aux + detalleorden[i].calcPrecio();
+        }
         float monto = 0; //Pago del cliente
         for(int i = 0; i<efectivo.size() ;++i){
             monto = monto + efectivo.get(i).getMonto();
